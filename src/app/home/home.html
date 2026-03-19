@@ -1,0 +1,28 @@
+<main>
+    <div class="navigation">
+        @if (getRange("from") > 1) {
+            <button id="navigate-left" (click)="setStep(-20)"></button>
+        }
+    </div>
+    <div class="content">
+        <button id="reset" (click)="reset()">
+            <img src="images/pokedex-logo.png" alt="Pokedex">
+        </button>
+        <div class="pokemons">
+            @for (pokemon of pokemons(); track $index) {
+            <a class="pokemon" [title]="pokemon.name" [routerLink]="['/pokemon', pokemon.index]">
+                <div class="index">#{{ pokemon.index }}</div>
+                <div class="image">
+                    <img [src]="pokemon.img" [alt]="pokemon.name" [fallback]="'images/pokeball-placeholder.png'">
+                </div>
+                <p>{{ pokemon.name }}</p>
+            </a>
+            }
+        </div>
+    </div>
+    <div class="navigation">
+        @if ((pokemons().length == getRange("to") - getRange("from") + 1) && getRange("from") >= 1) {
+            <button id="navigate-right" (click)="setStep(20)"></button>
+        }
+    </div>
+</main>

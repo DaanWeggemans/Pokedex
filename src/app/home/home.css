@@ -1,0 +1,128 @@
+main {
+    background-color: hsl(140, 50%, 90%);
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
+    display: flex;
+    width: 100%;
+    gap: 2rem;
+}
+
+.navigation {
+    align-items: center;
+    display: flex;
+    flex: 1;
+
+    &:first-child {
+        justify-content: end;
+    }
+
+    button {
+        background-color: hsl(140, 50%, 85%);
+        align-content: center;
+        transition: 250ms all;
+        aspect-ratio: 1 / 1;
+        cursor: pointer;
+        border: none;
+        height: 5rem;
+
+        &:hover {
+            background-color: hsl(140, 50%, 75%);
+        }
+        
+        &#navigate-left {
+            mask: url('./../../../public/svg/arrow-left.svg') no-repeat center / contain;
+        }
+
+        &#navigate-right {
+            mask: url('./../../../public/svg/arrow-right.svg') no-repeat center / contain;
+        }
+    }
+}
+
+.content {
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+    display: flex;
+}
+
+#reset {
+    background-color: transparent;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    border: none;
+}
+
+.pokemons {
+    grid-template-columns: repeat(7, 1fr);
+    place-items: center;
+    width: fit-content;
+    display: grid;
+    gap: 1rem;
+}
+
+.pokemon {
+    background-color: hsl(140, 50%, 85%);
+    color: hsl(0, 0%, 0%);
+    border-radius: 0.4rem;
+    text-decoration: none;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    cursor: pointer;
+    padding: 1rem;
+
+    &:hover img {
+        transform: scale(1.3);
+    }
+
+    .index {
+        border: 0.4rem solid hsl(140, 50%, 90%);
+        background-color: hsl(140, 50%, 85%);
+        position: absolute;
+        text-align: center;
+        padding: 0.4rem;
+        width: 5rem;
+        left: -1rem;
+        top: -1rem;
+    }
+
+    .image {
+        background-image: radial-gradient(closest-side, hsl(140, 50%, 80%), transparent);
+        background-color: hsl(140, 50%, 90%);
+        margin-bottom: 0.6rem;
+        border-radius: 0.4rem;
+        width: fit-content;
+
+        img {
+            text-overflow: ellipsis;
+            transition: 250ms all;
+            aspect-ratio: 1 / 1;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+            height: 6rem;
+
+            &.img-failed {
+                animation: spin 2s infinite linear;
+            }
+        }
+    }
+
+    p {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: center;
+        overflow: hidden;
+        width: 6rem;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
