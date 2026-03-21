@@ -1,1 +1,12 @@
-<h1>{{ id }}</h1>
+<main>
+    <div class="pokemon">
+
+    </div>
+    <div class="pokemons">
+        @for (item of pokemons(); track $index) {
+            <div class="pokemon" [class.selected]="item.index == pokemon()?.index">
+                <p>{{ item.name }}</p>
+            </div>
+        }
+    </div>
+</main>

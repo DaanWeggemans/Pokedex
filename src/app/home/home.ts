@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { PokemonInterface } from '../common/interfaces/pokemon';
+import { PokemonAbstractionInterface } from '../common/interfaces/pokemon';
 import { Client } from '../common/client/client';
 import { ImgFallback } from '../common/directives/img-fallback';
 import { RouterLink } from "@angular/router";
@@ -13,7 +13,7 @@ import { RouterLink } from "@angular/router";
 export class Home implements OnInit {
   client = inject(Client);
 
-  pokemons = signal<PokemonInterface[]>([]);
+  pokemons = signal<PokemonAbstractionInterface[]>([]);
 
   async ngOnInit() {
     await this.setPokemon();
@@ -21,7 +21,7 @@ export class Home implements OnInit {
 
   async setPokemon() {
     document.querySelectorAll(".pokemon .image").forEach(x => x.firstElementChild?.classList.remove("img-failed"));
-    const storage: PokemonInterface[] = JSON.parse(localStorage.getItem("pokemons") ?? "[]");
+    const storage: PokemonAbstractionInterface[] = JSON.parse(localStorage.getItem("pokemons") ?? "[]");
     const [from, to] = this.getRanges() as [number, number];
 
     const pokemonsInStorage = storage.filter(x => {
@@ -32,7 +32,7 @@ export class Home implements OnInit {
       return (x.index >= from && x.index <= to);
     });
 
-    let pokemons: PokemonInterface[] = [];
+    let pokemons: PokemonAbstractionInterface[] = [];
     if (pokemonsInStorage.length != to - from + 1) {
       pokemons = await this.client.getPokemonsInRange(from, to);
       storage.push(...pokemons.filter(x => !storage.map(x => x.index).includes(x.index)));

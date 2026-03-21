@@ -1,0 +1,27 @@
+main {
+    background-color: hsl(140, 50%, 90%);
+    min-height: 100vh;
+    padding: 1rem;
+    display: flex;
+    width: 100%;
+    gap: 2rem;
+}
+
+.pokemons {
+    background-color: yellow;
+    flex-direction: column;
+    align-items: end;
+    display: flex;
+    width: 22rem;
+
+    .pokemon {
+        background-color: aqua;
+        transition: 250ms all;
+        padding: 0.4rem;
+        width: 20rem;
+
+        &.selected, &:hover {
+            transform: scale(1.1) translateX(-0.9rem);
+        }
+    }
+}
