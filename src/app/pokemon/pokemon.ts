@@ -1,11 +1,12 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Client } from '../common/client/client';
 import { PokemonAbstractionInterface, PokemonInterface } from '../common/interfaces/pokemon';
+import { PokemonDetail } from '../pokemon-detail/pokemon-detail';
 
 @Component({
   selector: 'app-pokemon',
-  imports: [],
+  imports: [PokemonDetail, RouterLink],
   templateUrl: './pokemon.html',
   styleUrl: './pokemon.css',
 })
@@ -19,7 +20,12 @@ export class Pokemon implements OnInit {
   pokemons = signal<PokemonAbstractionInterface[]>([]);
 
   async ngOnInit() {
-    this.id = Number(this.route.snapshot.paramMap.get("id"));
+    await this.navigate(Number(this.route.snapshot.paramMap.get("id")));
+  }
+
+  async navigate(index: number) {
+    this.router.navigate(['/pokemon', index]);
+    this.id = index;
 
     if (Number.isNaN(this.id))
       this.router.navigate(["/"]);
@@ -29,11 +35,20 @@ export class Pokemon implements OnInit {
       this.router.navigate(["/"]);
 
     const storage = JSON.parse(localStorage.getItem("pokemons") ?? "[]") as PokemonAbstractionInterface[];
-    if (!storage.find(x => x.index == pokemon?.index))
+    if (!storage.find(x => x.index == pokemon?.index)) {
       storage.push({ img: pokemon?.img, index: pokemon?.index, name: pokemon?.name } as PokemonAbstractionInterface);
+      localStorage.setItem("pokemons", JSON.stringify(storage));
+    }
     
     console.log(pokemon);
     this.pokemon.set(pokemon!);
-    this.pokemons.set(storage.sort((a: any, b: any) => a.index > b.index ? 1 : (a.index < a.index ? -1 : 0)));
+    this.pokemons.set(storage.sort((a: any, b: any) => a.index - b.index));
+
+    setTimeout(() => {
+      document.querySelector(".selected")?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }, 10);
   }
 }

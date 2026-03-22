@@ -7,21 +7,91 @@ main {
     gap: 2rem;
 }
 
-.pokemons {
-    background-color: yellow;
+section {
     flex-direction: column;
+    display: flex;
+    gap: 1rem;
+    flex: 1;
+}
+
+#reset {
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+}
+
+app-pokemon-detail {
+    flex: 1;
+}
+
+.pokedex {
+    height: calc(100vh - 2rem);
+    justify-content: center;
+    width: max(22rem, 25%);
+    flex-direction: column;
+    display: flex;
+    gap: 1rem;
+}
+
+.navigation {
+    justify-content: center;
+    display: flex;
+    height: 5rem;
+
+    button {
+        background-color: hsl(140, 50%, 85%);
+        align-content: center;
+        transition: 250ms all;
+        aspect-ratio: 1 / 1;
+        cursor: pointer;
+        border: none;
+        height: 5rem;
+
+        &:hover {
+            background-color: hsl(140, 50%, 75%);
+        }
+        
+        &#navigate-left {
+            mask: url('./../../../public/svg/arrow-up.svg') no-repeat center / contain;
+        }
+
+        &#navigate-right {
+            mask: url('./../../../public/svg/arrow-down.svg') no-repeat center / contain;
+        }
+    }
+}
+
+.pokemons {
+    -ms-overflow-style: none;
+    flex-direction: column;
+    scrollbar-width: none;
+    overflow-y: scroll;
     align-items: end;
     display: flex;
-    width: 22rem;
+    flex: 1;
 
-    .pokemon {
-        background-color: aqua;
-        transition: 250ms all;
-        padding: 0.4rem;
-        width: 20rem;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 
-        &.selected, &:hover {
-            transform: scale(1.1) translateX(-0.9rem);
-        }
+}
+
+.pokemon {
+    background-color: hsl(140, 50%, 85%);
+    color: hsl(0, 0%, 0%);
+    transition: 250ms all;
+    text-decoration: none;
+    padding: 0.4rem;
+    cursor: pointer;
+    width: 98%;
+
+    &.selected {
+        background-color: hsl(140, 50%, 75%);
+    }
+
+    &.selected, &:hover {
+        transform: scale(1.02) translateX(-0.25rem);
+        border-radius: 0.4rem 0 0 0.4rem;
     }
 }

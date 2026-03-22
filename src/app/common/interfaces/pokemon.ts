@@ -16,6 +16,7 @@ export interface PokemonStatInterface {
 
 export interface PokemonTypeInterface {
     name: string;
+    img: string;
 }
 
 export interface PokemonInterface extends PokemonAbstractionInterface {

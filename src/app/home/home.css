@@ -95,6 +95,7 @@ main {
         width: fit-content;
 
         img {
+            image-rendering: pixelated;
             text-overflow: ellipsis;
             transition: 250ms all;
             aspect-ratio: 1 / 1;

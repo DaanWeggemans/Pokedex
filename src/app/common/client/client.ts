@@ -23,7 +23,7 @@ export class Client {
       .pipe(
         mergeMap((response: any) => {
           const result: PokemonAbstractionInterface[] = (response.results?.map((pokemon: any) => {
-            const index = Number(pokemon.url.substring(pokemon.url.indexOf("pokemon")).split("/")[1] ?? "10000");
+            const index = Number(pokemon.url.substring(pokemon.url.indexOf("pokemon")).split("/")[1]) || 10000;
             const name = pokemon.name ?? "";
             const img = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index}.png`;
 
@@ -51,22 +51,33 @@ export class Client {
     const response$ = this.http.get(url, options)
       .pipe(
         mergeMap((response: any) => {
-          const index = Number(response.species.url.substring(response.species.url.indexOf("pokemon-species")).split("/")[1] ?? "10000");
+          const index = Number(response.species.url.substring(response.species.url.indexOf("pokemon-species")).split("/")[1]) || 10000;
           const name = response.species.name ?? "";
           const img = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index}.png`;
-
+          
           const result: PokemonInterface = {
             img: img,
             name: name.substring(0, 1).toUpperCase() + name.substring(1),
             index: index,
             abilities: response.abilities.map((ability: any) => {
-              return { name: ability.ability.name, isHidden: ability.is_hidden } as PokemonAbilityInterface;
+              return {
+                name: ability.ability.name.replace(/[- ].|^./g, (letter: string) => letter.replaceAll("-", " ").toUpperCase()),
+                isHidden: ability.is_hidden
+              } as PokemonAbilityInterface;
             }),
             stats: response.stats.map((stat: any) => {
-              return { base: stat.base_stat, name: stat.stat.name } as PokemonStatInterface;
+              return {
+                base: stat.base_stat,
+                name: stat.stat.name
+              } as PokemonStatInterface;
             }),
             types: response.types.map((type: any) => {
-              return { name: type.type.name } as PokemonTypeInterface;
+              const index = Number(type.type.url.substring(type.type.url.indexOf("type")).split("/")[1]) || 1;
+              const img = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-viii/brilliant-diamond-shining-pearl/${index}.png`;
+              return {
+                name: type.type.name,
+                img: img
+              } as PokemonTypeInterface;
             })
           };
 

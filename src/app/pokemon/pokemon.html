@@ -1,12 +1,29 @@
 <main>
-    <div class="pokemon">
-
-    </div>
-    <div class="pokemons">
-        @for (item of pokemons(); track $index) {
-            <div class="pokemon" [class.selected]="item.index == pokemon()?.index">
-                <p>{{ item.name }}</p>
-            </div>
-        }
+    @if (pokemon()) {
+        <section>
+            <button id="reset" routerLink="/">
+                <img src="images/pokedex-logo.png" alt="Pokedex">
+            </button>
+            <app-pokemon-detail [pokemon]="pokemon()!"></app-pokemon-detail>
+        </section>
+    }
+    <div class="pokedex">
+        <div class="navigation">
+            @if ((pokemon()?.index ?? 2) > 1) {
+                <button id="navigate-left" (click)="navigate(id - 1)"></button>
+            }
+        </div>
+        <div class="pokemons">
+            @for (item of pokemons(); track $index) {
+                <div class="pokemon" [class.selected]="item.index == pokemon()?.index" (click)="navigate(item.index)">
+                    <p>#{{ item.index }} {{ item.name }}</p>
+                </div>
+            }
+        </div>
+        <div class="navigation">
+            @if ((pokemon()?.index ?? 1025) <= 1025) {
+                <button id="navigate-right" (click)="navigate(id + 1)"></button>
+            }
+        </div>
     </div>
 </main>

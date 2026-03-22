@@ -1,0 +1,54 @@
+<div class="pokemon">
+    <section>
+        <div class="image">
+            <p class="index">#{{ pokemon.index }}</p>
+            <img [src]="pokemon.img" [alt]="pokemon.name">
+        </div>
+    </section>
+    <section>
+        <h2 class="pokemon-name">{{ pokemon.name }}</h2>
+        <div class="types">
+            @for (item of pokemon.types; track $index) {
+                <img [src]="item.img" [alt]="item.name" [title]="item.name.replace(/^./g, (letter) => letter.toUpperCase())">
+            }
+        </div>
+        <h2>Abilities</h2>
+        <div class="abilities">
+            @for (item of pokemon.abilities; track $index) {
+                <div class="ability" [title]="`${item.name}${item.isHidden ? ' (hidden)' : ''}`">
+                    <p>{{ item.name }}</p>
+                    @if (item.isHidden) {
+                        <img src="/svg/hidden.svg" alt="is-hidden">
+                    }
+                </div>
+            }
+        </div>
+        <h2>Stats</h2>
+        <div class="stats">
+            <div class="stat" id="hp">
+                <p class="value">{{ getStat("hp") }}</p>
+                <p>HP</p>
+            </div>
+            <div class="stat" id="attack">
+                <p class="value">{{ getStat("attack") }}</p>
+                <p>ATK</p>
+            </div>
+            <div class="stat" id="defense">
+                <p class="value">{{ getStat("defense") }}</p>
+                <p>DEF</p>
+            </div>
+            <div class="stat" id="special-attack">
+                <p class="value">{{ getStat("special-attack") }}</p>
+                <p>SP-ATK</p>
+            </div>
+            <div class="stat" id="special-defense">
+                <p class="value">{{ getStat("special-defense") }}</p>
+                <p>SP-DEF</p>
+            </div>
+            <div class="stat" id="speed">
+                <p class="value">{{ getStat("speed") }}</p>
+                <p>SPD</p>
+            </div>
+        </div>
+    </section>
+</div>
