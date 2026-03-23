@@ -133,3 +133,15 @@ h2 {
         }
     }
 }
+
+@media screen and (max-width: 880px) {
+    .pokemon {
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .image {
+        justify-content: center;
+        display: flex;
+    }
+}

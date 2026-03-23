@@ -95,3 +95,31 @@ app-pokemon-detail {
         border-radius: 0.4rem 0 0 0.4rem;
     }
 }
+
+@media screen and (max-width: 970px) {
+    main {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .pokedex {
+        width: 100%;
+    }
+
+    .pokemons {
+        align-items: center;
+    }
+
+    .pokemon {
+        &.selected, &:hover {
+            transform: scale(1.02);
+            border-radius: 0.4rem;
+        }
+    }
+}
+
+@media screen and (max-width: 880px) {
+    #reset img {
+        width: 100%;
+    }
+}

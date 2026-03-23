@@ -20,25 +20,18 @@ export class Home implements OnInit {
   }
 
   async setPokemon() {
-    document.querySelectorAll(".pokemon .image").forEach(x => x.firstElementChild?.classList.remove("img-failed"));
+    document.querySelectorAll(".img-failed").forEach(x => x.classList.remove("img-failed"));
     const storage: PokemonAbstractionInterface[] = JSON.parse(localStorage.getItem("pokemons") ?? "[]");
     const [from, to] = this.getRanges() as [number, number];
 
-    const pokemonsInStorage = storage.filter(x => {
-      if (from == 1021)
-        return x.index >= from && x.index <= 10015;
-      if (from > 1021)
-        return x.index >= from + 8976 && x.index <= to + 8976;
-      return (x.index >= from && x.index <= to);
-    });
+    const pokemonsInStorage = storage.filter(x => x.index >= from && x.index <= to);
+    const pokemons: PokemonAbstractionInterface[] = pokemonsInStorage.length != to - from + 1
+      ? await this.client.getPokemonsInRange(from, to)
+      : pokemonsInStorage;
 
-    let pokemons: PokemonAbstractionInterface[] = [];
     if (pokemonsInStorage.length != to - from + 1) {
-      pokemons = await this.client.getPokemonsInRange(from, to);
       storage.push(...pokemons.filter(x => !storage.map(x => x.index).includes(x.index)));
       localStorage.setItem("pokemons", JSON.stringify(storage));
-    } else {
-      pokemons = pokemonsInStorage;
     }
     
     this.pokemons.set(pokemons);

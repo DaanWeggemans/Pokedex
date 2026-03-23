@@ -30,25 +30,57 @@ export class Pokemon implements OnInit {
     if (Number.isNaN(this.id))
       this.router.navigate(["/"]);
 
-    const pokemon = await this.client.getPokemon(this.id);
-    if (!pokemon)
-      this.router.navigate(["/"]);
+    let [storagePokemonsDetail, storagePokemons] = this.getStorage();
+    const pokemon = storagePokemonsDetail.find(x => x.index == this.id) != undefined
+      ? storagePokemonsDetail.find(x => x.index == this.id)
+      : await this.client.getPokemon(this.id);
 
-    const storage = JSON.parse(localStorage.getItem("pokemons") ?? "[]") as PokemonAbstractionInterface[];
-    if (!storage.find(x => x.index == pokemon?.index)) {
-      storage.push({ img: pokemon?.img, index: pokemon?.index, name: pokemon?.name } as PokemonAbstractionInterface);
+    if (storagePokemonsDetail.find(x => x.index == this.id) == undefined) {
+      if (!pokemon)
+        this.router.navigate(["/"]);
+
+      storagePokemons = this.storePokemonsIfNeeded(storagePokemons, pokemon!);
+      this.storePokemonsDetailIfNeeded(storagePokemonsDetail, pokemon!);
+    }
+
+    this.pokemon.set(pokemon!);
+    this.pokemons.set(storagePokemons);
+
+    if (window.innerWidth > 970) {
+      setTimeout(() => {
+        document.querySelector(".selected")?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 10);
+    }
+  }
+
+  getStorage(): [PokemonInterface[], PokemonAbstractionInterface[]] {
+    return [
+      (JSON.parse(localStorage.getItem("pokemons-detail") ?? "[]") as PokemonInterface[])
+        .filter(x => x && x.index)
+        .sort((a: any, b: any) => a.index - b.index),
+      (JSON.parse(localStorage.getItem("pokemons") ?? "[]") as PokemonAbstractionInterface[])
+        .filter(x => x && x.index)
+        .sort((a: any, b: any) => a.index - b.index)
+    ];
+  }
+
+  storePokemonsIfNeeded(storage: PokemonAbstractionInterface[], pokemon: PokemonInterface) {
+    if (!storage.find(x => x.index == pokemon!.index)) {
+      storage.push({ img: pokemon!.img, index: pokemon!.index, name: pokemon!.name } as PokemonAbstractionInterface);
+      storage = storage.sort((a: any, b: any) => a.index - b.index);
       localStorage.setItem("pokemons", JSON.stringify(storage));
     }
-    
-    console.log(pokemon);
-    this.pokemon.set(pokemon!);
-    this.pokemons.set(storage.sort((a: any, b: any) => a.index - b.index));
+    return storage;
+  }
 
-    setTimeout(() => {
-      document.querySelector(".selected")?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-      });
-    }, 10);
+  storePokemonsDetailIfNeeded(storage: PokemonInterface[], pokemon: PokemonInterface) {
+    if (!storage.find(x => x.index == pokemon?.index)) {
+      storage.push(pokemon!);
+      storage = storage.sort((a: any, b: any) => a.index - b.index);
+      localStorage.setItem("pokemons-detail", JSON.stringify(storage));
+    }
   }
 }

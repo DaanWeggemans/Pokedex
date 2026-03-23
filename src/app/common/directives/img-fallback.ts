@@ -1,8 +1,6 @@
 import { Directive, ElementRef, HostListener, inject, Input } from '@angular/core';
 
-@Directive({
-  selector: 'img[fallback]',
-})
+@Directive({ selector: 'img[fallback]' })
 export class ImgFallback {
   @Input({ required: true }) fallback!: string;
   reference = inject(ElementRef);
