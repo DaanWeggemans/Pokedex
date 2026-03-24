@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, InjectionToken } from "@angular/core";
 import { catchError, firstValueFrom, mergeMap, of } from "rxjs";
 import { PokemonAbilityInterface, PokemonAbstractionInterface, PokemonInterface, PokemonStatInterface, PokemonTypeInterface } from "../interfaces/pokemon";
@@ -10,18 +10,18 @@ export class Client {
   baseUrl = inject(API_BASE_URL);
   http = inject(HttpClient);
 
-  async getPokemonsInRange(from: number, to: number) {
-    const url = `${this.baseUrl}/pokemon-species`;
+  async getPokemons() {
+    const url = localStorage.getItem("current_link") ?? `${this.baseUrl}/pokemon`;
     const options: any = {
       responseType: 'json',
-      params: new HttpParams()
-        .set("offset", from - 1)
-        .set("limit", to - from + 1)
     };
 
     const response$ = this.http.get(url, options)
       .pipe(
         mergeMap((response: any) => {
+          localStorage.setItem("previous_link", response.previous ?? "");
+          localStorage.setItem("next_link", response.next ?? "");
+
           const result: PokemonAbstractionInterface[] = (response.results?.map((pokemon: any) => {
             const index = Number(pokemon.url.substring(pokemon.url.indexOf("pokemon")).split("/")[1]) || 10000;
             const name = pokemon.name ?? "";

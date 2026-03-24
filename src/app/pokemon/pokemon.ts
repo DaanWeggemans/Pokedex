@@ -36,7 +36,7 @@ export class Pokemon implements OnInit {
     if (Number.isNaN(this.id))
       this.router.navigate(["/"]);
 
-    let [storagePokemonsDetail, storagePokemons] = this.getStorage();
+    const [storagePokemonsDetail, storagePokemons] = this.getStorage();
     const pokemon = storagePokemonsDetail.find(x => x.index == this.id) != undefined
       ? storagePokemonsDetail.find(x => x.index == this.id)
       : await this.client.getPokemon(this.id);
@@ -46,12 +46,13 @@ export class Pokemon implements OnInit {
       if (!pokemon)
         this.router.navigate(["/"]);
 
-      storagePokemons = this.storePokemonsIfNeeded(storagePokemons, pokemon!);
+      if (storagePokemons.find(x => x.index == pokemon?.index) == undefined)
+        storagePokemons.push(pokemon!);
       this.storePokemonsDetailIfNeeded(storagePokemonsDetail, pokemon!);
     }
 
     this.pokemon.set(pokemon!);
-    this.pokemons.set(storagePokemons);
+    this.pokemons.set(storagePokemons.sort((a: any, b: any) => a.index - b.index));
 
     if (window.innerWidth > 970) {
       setTimeout(() => {
@@ -88,19 +89,15 @@ export class Pokemon implements OnInit {
       (JSON.parse(localStorage.getItem("pokemons-detail") ?? "[]") as PokemonInterface[])
         .filter(x => x && x.index)
         .sort((a: any, b: any) => a.index - b.index),
-      (JSON.parse(localStorage.getItem("pokemons") ?? "[]") as PokemonAbstractionInterface[])
+      (JSON.parse(localStorage.getItem("pokemons") ?? "[]") as {
+        previous_link: string,
+        current_link: string,
+        next_link: string,
+        pokemons: PokemonAbstractionInterface[]
+      }[]).flatMap(x => x.pokemons)
         .filter(x => x && x.index)
         .sort((a: any, b: any) => a.index - b.index)
     ];
-  }
-
-  storePokemonsIfNeeded(storage: PokemonAbstractionInterface[], pokemon: PokemonInterface) {
-    if (!storage.find(x => x.index == pokemon!.index)) {
-      storage.push({ img: pokemon!.img, index: pokemon!.index, name: pokemon!.name } as PokemonAbstractionInterface);
-      storage = storage.sort((a: any, b: any) => a.index - b.index);
-      localStorage.setItem("pokemons", JSON.stringify(storage));
-    }
-    return storage;
   }
 
   storePokemonsDetailIfNeeded(storage: PokemonInterface[], pokemon: PokemonInterface| undefined = undefined) {

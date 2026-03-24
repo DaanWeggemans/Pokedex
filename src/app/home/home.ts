@@ -21,45 +21,67 @@ export class Home implements OnInit {
 
   async setPokemon() {
     document.querySelectorAll(".img-failed").forEach(x => x.classList.remove("img-failed"));
-    const storage: PokemonAbstractionInterface[] = JSON.parse(localStorage.getItem("pokemons") ?? "[]");
-    const [from, to] = this.getRanges() as [number, number];
 
-    const pokemonsInStorage = storage.filter(x => x.index >= from && x.index <= to);
-    const pokemons: PokemonAbstractionInterface[] = pokemonsInStorage.length != to - from + 1
-      ? await this.client.getPokemonsInRange(from, to)
-      : pokemonsInStorage;
+    const pokemonsInStorage = this.getPokemons();
+    const pokemons: PokemonAbstractionInterface[] = !pokemonsInStorage
+      ? await this.client.getPokemons()
+      : pokemonsInStorage.pokemons;
 
-    if (pokemonsInStorage.length != to - from + 1) {
-      storage.push(...pokemons.filter(x => !storage.map(x => x.index).includes(x.index)));
-      localStorage.setItem("pokemons", JSON.stringify(storage));
-    }
+    if (!pokemonsInStorage)
+      this.storePokemons(pokemons);
     
     this.pokemons.set(pokemons);
   }
 
+  storePokemons(array: PokemonAbstractionInterface[]) {
+    const previous_link = localStorage.getItem("previous_link") ?? "";
+    const current_link = localStorage.getItem("current_link") ?? "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20";
+    const next_link = localStorage.getItem("next_link") ?? "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20";
+
+    const storage = JSON.parse(localStorage.getItem("pokemons") ?? "[]");
+    storage.push({ previous_link: previous_link, current_link: current_link, next_link: next_link, pokemons: array });
+    localStorage.setItem("pokemons", JSON.stringify(storage));
+  }
+
+  getPokemons() {
+    const current_link = localStorage.getItem("current_link") ?? "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20";
+
+    const storage = JSON.parse(localStorage.getItem("pokemons") ?? "[]");
+    const pokemonsInStorage = storage.find((x: any) => x.current_link == current_link);
+    if (!pokemonsInStorage)
+      return null;
+
+    localStorage.setItem("previous_link", pokemonsInStorage.previous_link);
+    localStorage.setItem("next_link", pokemonsInStorage.next_link);
+
+    return pokemonsInStorage as {
+      previous_link: string,
+      current_link: string,
+      next_link: string,
+      pokemons: PokemonAbstractionInterface[]
+    };
+  }
+
+  // .HTML functions
   async reset() {
-    localStorage.removeItem("from");
-    localStorage.removeItem("to");
+    localStorage.removeItem("previous_link");
+    localStorage.removeItem("current_link");
+    localStorage.removeItem("next_link");
 
     await this.setPokemon();
   }
 
-  async setStep(step: number) {
-    const [from, to] = this.getRanges() as [number, number];
-
-    localStorage.setItem("from", String(from + step));
-    localStorage.setItem("to", String(to + step));
-
+  async next() {
+    localStorage.setItem("current_link", localStorage.getItem("next_link") ?? "");
     await this.setPokemon();
   }
 
-  private getRanges(key: string | undefined = undefined): [number, number] | number {
-    const from = Number(localStorage.getItem("from") ?? "1");
-    const to = Number(localStorage.getItem("to") ?? "20");
-    return key && ["from", "to"].includes(key) ? (key == "from" ? from : to) : [from, to];
+  async previous() {
+    localStorage.setItem("current_link", localStorage.getItem("previous_link") ?? "");
+    await this.setPokemon();
   }
 
-  getRange(key: string) {
-    return this.getRanges(key) as number;
+  getFromStorage(name: string) {
+    return localStorage.getItem(name) ?? "";
   }
 }

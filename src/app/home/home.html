@@ -1,7 +1,7 @@
 <main>
     <div class="navigation">
-        @if (getRange("from") > 1) {
-            <button id="navigate-left" (click)="setStep(-20)"></button>
+        @if (getFromStorage("previous_link").length) {
+            <button id="navigate-left" (click)="previous()"></button>
         }
     </div>
     <div class="content">
@@ -21,8 +21,8 @@
         </div>
     </div>
     <div class="navigation">
-        @if ((pokemons().length == getRange("to") - getRange("from") + 1) && getRange("from") >= 1) {
-            <button id="navigate-right" (click)="setStep(20)"></button>
+        @if (getFromStorage("next_link").length) {
+            <button id="navigate-right" (click)="next()"></button>
         }
     </div>
 </main>
