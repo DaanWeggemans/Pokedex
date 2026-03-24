@@ -2,13 +2,19 @@
     background-color: hsl(140, 50%, 85%);
     border-radius: 0.4rem;
     padding: 1rem;
-    display: flex;
     width: 100%;
-    gap: 1rem;
+    
+    .details {
+        margin-bottom: 1rem;
+        display: flex;
+        width: 100%;
+        gap: 1rem;
 
-    section:last-child {
-        flex: 1;
+        section:last-child {
+            flex: 1;
+        }
     }
+
 }
 
 .image {
@@ -134,8 +140,61 @@ h2 {
     }
 }
 
+#toggle-evolution {
+    background-color: hsl(140, 50%, 80%);
+    border-radius: 0.4rem;
+    transition: 250ms all;
+    cursor: pointer;
+    padding: 1rem;
+    border: none;
+    width: 100%;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+}
+
+.evolution-chain {
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+
+    .next {
+        color: hsl(140, 50%, 75%);
+        font-weight: bold;
+    }
+}
+
+.evolution-item {
+    background-color: hsl(140, 50%, 84%);
+    justify-content: center;
+    height: fit-content;
+    padding: 0.5rem;
+    flex-wrap: wrap;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.evolution-button {
+    background-color: hsl(140, 50%, 80%);
+    border-radius: 0.4rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    display: block;
+    width: 7.5rem;
+    border: none;
+
+    img {
+        image-rendering: pixelated;
+        transition: 250ms all;
+        aspect-ratio: 1 / 1;
+    }
+}
+
 @media screen and (max-width: 880px) {
-    .pokemon {
+    .details {
         flex-direction: column;
         overflow: hidden;
     }
@@ -143,5 +202,16 @@ h2 {
     .image {
         justify-content: center;
         display: flex;
+    }
+
+    .evolution-chain {
+        -ms-overflow-style: none;
+        justify-content: start;
+        scrollbar-width: none;
+        overflow-x: scroll;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 }

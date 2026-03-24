@@ -1,54 +1,77 @@
 <div class="pokemon">
-    <section>
-        <div class="image">
-            <p class="index">#{{ pokemon.index }}</p>
-            <img [src]="pokemon.img" [alt]="pokemon.name">
-        </div>
-    </section>
-    <section>
-        <h2 class="pokemon-name">{{ pokemon.name }}</h2>
-        <div class="types">
-            @for (item of pokemon.types; track $index) {
-                <img [src]="item.img" [alt]="item.name" [title]="item.name.replace(/^./g, (letter) => letter.toUpperCase())">
-            }
-        </div>
-        <h2>Abilities</h2>
-        <div class="abilities">
-            @for (item of pokemon.abilities; track $index) {
+    <div class="details">
+        <section>
+            <div class="image">
+                <p class="index">#{{ pokemon.index }}</p>
+                <img [src]="pokemon.img" [alt]="pokemon.name">
+            </div>
+        </section>
+        <section>
+            <h2 class="pokemon-name">{{ pokemon.name }}</h2>
+            <div class="types">
+                @for (item of pokemon.types; track $index) {
+                <img [src]="item.img" [alt]="item.name"
+                    [title]="item.name.replace(/^./g, (letter) => letter.toUpperCase())">
+                }
+            </div>
+            <h2>Abilities</h2>
+            <div class="abilities">
+                @for (item of pokemon.abilities; track $index) {
                 <div class="ability" [title]="`${item.name}${item.isHidden ? ' (hidden)' : ''}`">
                     <p>{{ item.name }}</p>
                     @if (item.isHidden) {
-                        <img src="/svg/hidden.svg" alt="is-hidden">
+                    <img src="/svg/hidden.svg" alt="is-hidden">
                     }
                 </div>
-            }
-        </div>
-        <h2>Stats</h2>
-        <div class="stats">
-            <div class="stat" id="hp" title="Health Points">
-                <p class="value">{{ getStat("hp") }}</p>
-                <p>HP</p>
+                }
             </div>
-            <div class="stat" id="attack" title="Attack">
-                <p class="value">{{ getStat("attack") }}</p>
-                <p>ATK</p>
+            <h2>Stats</h2>
+            <div class="stats">
+                <div class="stat" id="hp" title="Health Points">
+                    <p class="value">{{ getStat("hp") }}</p>
+                    <p>HP</p>
+                </div>
+                <div class="stat" id="attack" title="Attack">
+                    <p class="value">{{ getStat("attack") }}</p>
+                    <p>ATK</p>
+                </div>
+                <div class="stat" id="defense" title="Defense">
+                    <p class="value">{{ getStat("defense") }}</p>
+                    <p>DEF</p>
+                </div>
+                <div class="stat" id="special-attack" title="Special Attack">
+                    <p class="value">{{ getStat("special-attack") }}</p>
+                    <p>SP-ATK</p>
+                </div>
+                <div class="stat" id="special-defense" title="Special Defense">
+                    <p class="value">{{ getStat("special-defense") }}</p>
+                    <p>SP-DEF</p>
+                </div>
+                <div class="stat" id="speed" title="Speed">
+                    <p class="value">{{ getStat("speed") }}</p>
+                    <p>SPD</p>
+                </div>
             </div>
-            <div class="stat" id="defense" title="Defense">
-                <p class="value">{{ getStat("defense") }}</p>
-                <p>DEF</p>
+        </section>
+    </div>
+    <div class="evolution">
+        <button id="toggle-evolution" (click)="toggleEvolution()">{{ isToggledEvolution ? "Sluit" : "Open" }} Evolution Chart</button>
+        @if (isToggledEvolution && pokemon.evolution) {
+            <div class="evolution-chain">
+                 @for (chain of pokemon.evolution; track $index) {
+                    <div class="evolution-item">
+                        @for (item of chain; track $index) {
+                            <button class="evolution-button" (click)="selectEvolution(item.index)">
+                                <img [src]="item.img" [alt]="item.name">
+                                <p>{{ item.name }}</p>
+                            </button>
+                        }
+                    </div>
+                    @if (pokemon.evolution[$index + 1]) {
+                        <p class="next">></p>
+                    }
+                }
             </div>
-            <div class="stat" id="special-attack" title="Special Attack">
-                <p class="value">{{ getStat("special-attack") }}</p>
-                <p>SP-ATK</p>
-            </div>
-            <div class="stat" id="special-defense" title="Special Defense">
-                <p class="value">{{ getStat("special-defense") }}</p>
-                <p>SP-DEF</p>
-            </div>
-            <div class="stat" id="speed" title="Speed">
-                <p class="value">{{ getStat("speed") }}</p>
-                <p>SPD</p>
-            </div>
-        </div>
-    </section>
+        }
+    </div>
 </div>

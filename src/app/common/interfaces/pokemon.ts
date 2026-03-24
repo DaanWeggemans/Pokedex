@@ -23,4 +23,5 @@ export interface PokemonInterface extends PokemonAbstractionInterface {
     abilities: PokemonAbilityInterface[];
     stats: PokemonStatInterface[];
     types: PokemonTypeInterface[];
+    evolution: PokemonAbstractionInterface[][] | undefined;
 }

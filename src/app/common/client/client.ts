@@ -59,6 +59,7 @@ export class Client {
             img: img,
             name: name.substring(0, 1).toUpperCase() + name.substring(1),
             index: index,
+            evolution: undefined,
             abilities: response.abilities.map((ability: any) => {
               return {
                 name: ability.ability.name.replace(/[- ].|^./g, (letter: string) => letter.replaceAll("-", " ").toUpperCase()),
@@ -87,5 +88,49 @@ export class Client {
       );
 
 		return await firstValueFrom(response$);
+  }
+
+  async getEvolutionChain(id: number) {
+    const url = `${this.baseUrl}/pokemon-species/${id}`;
+    const options: any = {
+      responseType: 'json'
+    };
+    
+    const response$ = this.http.get(url, options)
+      .pipe(
+        mergeMap((response: any) => {
+          return this.http.get(response.evolution_chain.url, options)
+            .pipe(
+              mergeMap((response: any) => {
+                const result: PokemonAbstractionInterface[][] = [];
+                let chain = [response.chain];
+
+                do {
+                  const array: PokemonAbstractionInterface[] = [];
+                  chain.forEach((pokemon: any) => {
+                    const index = Number(pokemon.species.url.substring(pokemon.species.url.indexOf("pokemon-species")).split("/")[1]) || 10000;
+                    const name = pokemon.species.name ?? "";
+                    const img = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index}.png`;
+
+                    array.push({
+                      img: img,
+                      name: name.substring(0, 1).toUpperCase() + name.substring(1),
+                      index: index
+                    });
+                  });
+
+                  result.push(array);
+                  chain = chain[0].evolves_to;
+                } while (Array.isArray(chain) && (chain as any[]).length);
+
+                return of(result);
+              }),
+              catchError((error: any) => of([]))
+            );
+        }),
+        catchError((error: any) => of([]))
+      );
+
+		return await firstValueFrom(response$) as PokemonInterface[][];
   }
 }
