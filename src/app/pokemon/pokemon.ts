@@ -49,9 +49,12 @@ export class Pokemon implements OnInit {
       this.storePokemonsDetailIfNeeded(storagePokemonsDetail, pokemon!);
     }
     
+    storagePokemons.push(...storagePokemonsDetail.filter(x => !storagePokemons.map(y => y.index).includes(x.index)));
     if (storagePokemons.find(x => x.index == pokemon?.index) == undefined)
       storagePokemons.push(pokemon!);
 
+    if (!pokemon?.evolution)
+      this.isEvolutionToggled = false;
     this.pokemon.set(pokemon!);
     this.pokemons.set(storagePokemons.sort((a: any, b: any) => a.index - b.index));
 
