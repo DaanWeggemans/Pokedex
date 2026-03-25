@@ -46,10 +46,11 @@ export class Pokemon implements OnInit {
       if (!pokemon)
         this.router.navigate(["/"]);
 
-      if (storagePokemons.find(x => x.index == pokemon?.index) == undefined)
-        storagePokemons.push(pokemon!);
       this.storePokemonsDetailIfNeeded(storagePokemonsDetail, pokemon!);
     }
+    
+    if (storagePokemons.find(x => x.index == pokemon?.index) == undefined)
+      storagePokemons.push(pokemon!);
 
     this.pokemon.set(pokemon!);
     this.pokemons.set(storagePokemons.sort((a: any, b: any) => a.index - b.index));
