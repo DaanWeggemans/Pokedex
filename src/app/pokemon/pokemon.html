@@ -4,7 +4,7 @@
             <button id="reset" routerLink="/">
                 <img src="images/pokedex-logo.png" alt="Pokedex">
             </button>
-            <app-pokemon-detail [pokemon]="pokemon()!" [isToggledEvolution]="isEvolutionToggled" (retrieveEvolution)="retrieveEvolution()" (clickEvolution)="navigate($event)"></app-pokemon-detail>
+            <app-pokemon-detail [pokemon]="pokemon()!" [isToggledEvolution]="isEvolutionToggled" (retrieveEvolution)="retrieveEvolution()" (clickEvolution)="navigate($event, true)"></app-pokemon-detail>
         </section>
     }
     <div class="pokedex">

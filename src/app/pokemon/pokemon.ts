@@ -24,7 +24,7 @@ export class Pokemon implements OnInit {
     await this.navigate(Number(this.route.snapshot.paramMap.get("id")));
   }
 
-  async navigate(index: number) {
+  async navigate(index: number, navigateByEvolutionChart: boolean = false) {
     if (this.id == index)
       return;
     
@@ -55,7 +55,7 @@ export class Pokemon implements OnInit {
     this.pokemon.set(pokemon!);
     this.pokemons.set(storagePokemons.sort((a: any, b: any) => a.index - b.index));
 
-    if (window.innerWidth > 970) {
+    if (window.innerWidth > 970 && !navigateByEvolutionChart) {
       setTimeout(() => {
         document.querySelector(".selected")?.scrollIntoView({
           behavior: 'smooth',
