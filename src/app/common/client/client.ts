@@ -54,12 +54,17 @@ export class Client {
           const index = Number(response.species.url.substring(response.species.url.indexOf("pokemon-species")).split("/")[1]) || 10000;
           const name = response.species.name ?? "";
           const img = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index}.png`;
+
+          const storage = JSON.parse(localStorage.getItem("pokemons-detail") ?? "[]") as PokemonInterface[];
+          const evolution = storage.find(x => x.evolution?.some(y => y.some(z => z.index == index)))?.evolution;
+
+          console.log(storage, evolution);
           
           const result: PokemonInterface = {
             img: img,
             name: name.substring(0, 1).toUpperCase() + name.substring(1),
             index: index,
-            evolution: undefined,
+            evolution: evolution ? evolution : undefined,
             abilities: response.abilities.map((ability: any) => {
               return {
                 name: ability.ability.name.replace(/[- ].|^./g, (letter: string) => letter.replaceAll("-", " ").toUpperCase()),

@@ -24,13 +24,11 @@ export class Pokemon implements OnInit {
     await this.navigate(Number(this.route.snapshot.paramMap.get("id")));
   }
 
-  async navigate(index: number, disableEvolutions: boolean = true) {
+  async navigate(index: number) {
     if (this.id == index)
       return;
     
     this.router.navigate(['/pokemon', index]);
-    if (disableEvolutions)
-      this.isEvolutionToggled = false;
     this.id = index;
 
     if (Number.isNaN(this.id))
@@ -42,7 +40,6 @@ export class Pokemon implements OnInit {
       : await this.client.getPokemon(this.id);
 
     if (storagePokemonsDetail.find(x => x.index == this.id) == undefined) {
-      this.isEvolutionToggled = false;
       if (!pokemon)
         this.router.navigate(["/"]);
 
@@ -82,8 +79,13 @@ export class Pokemon implements OnInit {
     const evolution = possibility ? possibility : await this.client.getEvolutionChain(this.id);
     if (!pokemon || !evolution.length)
       return;
-
     pokemon.evolution = evolution;
+    array.forEach((pokemon: PokemonInterface) => {
+      if (evolution.flatMap(x => x.flatMap(y => y.index)).includes(pokemon.index)) {
+        pokemon.evolution = evolution;
+      }
+    });
+
     this.pokemon.set(pokemon);
     this.storePokemonsDetailIfNeeded(array);
   }
