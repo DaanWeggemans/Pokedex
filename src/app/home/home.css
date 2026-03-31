@@ -160,14 +160,14 @@ main {
 
 @media screen and (max-width: 575px) {
     #reset img {
-        height: 75%;
+        height: 50%;
     }
 
     #navigate-left {
-        left: calc(50% - 11rem) !important;
+        left: calc(50% - 8rem) !important;
     }
 
     #navigate-right {
-        left: calc(50% + 11rem) !important;
+        left: calc(50% + 8rem) !important;
     }
 }
