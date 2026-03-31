@@ -32,7 +32,7 @@ export class Client {
               name: name.substring(0, 1).toUpperCase() + name.substring(1),
               index: index
             };
-          }) ?? []).filter((pokemon: PokemonAbstractionInterface) => pokemon.index < 10000);;
+          }) ?? []).filter((pokemon: PokemonAbstractionInterface) => pokemon.index < 10000);
 
           return of(result);
         }),
