@@ -11,7 +11,7 @@ export class Client {
   http = inject(HttpClient);
 
   async getPokemons() {
-    const url = localStorage.getItem("current_link") ?? `${this.baseUrl}/pokemon`;
+    const url = localStorage.getItem("current_link") ?? `${this.baseUrl}/pokemon?limit=21`;
     const options: any = {
       responseType: 'json',
     };
